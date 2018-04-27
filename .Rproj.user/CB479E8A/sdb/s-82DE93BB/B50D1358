@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "require(ggplot2)\n\n#Pts_reccnt <- as.data.frame(table(data1$PtID))\n#Pts_preproc <- Pts_reccnt[Pts_reccnt$Freq > 3,]\ndatalen <- length(data1$PtID)\n\nPts_1 <- matrix(0, 356, 5)\nfor(i in 1:356){\n  Pts_id <- Pts[i]\n  Pts_info <- as.matrix(data1[data1$PtID == Pts_id,])\n  Pts_1[i,1:5] <- Pts_info[1,1:5]\n}\nptid = Pts_1[Pts_1[,3] < 20,1]\nCd4_1_id <- rep(FALSE, datalen)\nfor(j in 1:121){\n  Cd4_1_id[data1$PtID == ptid[j]] = TRUE\n}\nCd4_1 <- data1[Cd4_1_id,]\n# plot(Cd4_1$CD4Date, Cd4_1$CD4Count)\n\nrcid <- as.integer(runif(40,1,356))\n\n\ntp_id <- rep(FALSE, datalen)\nfor(i in 1:length(rcid)){\n  tp_id[data1$PtID == Pts[rcid[i]]] = TRUE\n}\ntpdata <- data1[tp_id,]\ngfig <- ggplot()\nfor(i in 1:length(rcid)){\n  figdata = data1[data1$PtID == Pts[rcid[i]],]\n  gfig <- gfig + geom_line(data = figdata,aes(x = RNADate, y=VLoad))\n}\ngfig",
+    "created" : 1524818516158.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3681357443",
+    "id" : "B50D1358",
+    "lastKnownWriteTime" : 1524823371,
+    "last_content_update" : 1524823371420,
+    "path" : "~/Files/Codes/R/RPj_20_5011Project/codes/Design1.R",
+    "project_path" : "Design1.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
