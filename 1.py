@@ -19,6 +19,7 @@ dirpath = os.getcwd()
 datapath = os.path.join(dirpath, 'data1.csv')
 data1 = pd.read_csv(datapath)
 
+
 #%%
 #先将dataframe割开，从而删除掉 NaN记录
 da1 = data1.loc[:, ['PtID','CD4Date','CD4Count']]
@@ -169,26 +170,26 @@ for ptID in patient:
         last_vload = v_dict[ptID][-1]
         if last_period>10 and last_vload >3:
             result[ptID] = [last_period, 'stop-treatment']
-            continue      
+            continue
     coe = best_m[ptID].c 
     new_coe = coe.copy()
     new_coe[-1] -= 500
     root = np.roots(new_coe)
+    ans = []
     for i in root:
        if isinstance(i, complex):
-           result[ptID] = [x_dict[ptID][-1],'stop-treatment']
+           ans.append(1000000)
+       elif i<=0:
+           ans.append(1000000)
        else:
-           ans = []
-           if i > 0:
-               ans.append(i)
-               predtime = min(ans)
-               if predtime > x_dict[ptID][-1]:
-                   result[ptID] = [min(ans),'keep-treatment']
-                   break
-               else:
-                   result[ptID] = [x_dict[ptID][-1],'stop-treatment']
-           else:
-               result[ptID] = [x_dict[ptID][-1],'stop-treatment']
+           ans.append(i)
+    ans.sort()               
+    if ans[0] > x_dict[ptID][-1] and ans[0]!=1000000:
+        result[ptID] = [ans[0],'keep-treatment']
+    elif ans[1] > x_dict[ptID][-1] and ans[1]!=1000000:
+        result[ptID] = [ans[1],'keep-treatment']        
+    else:
+        result[ptID] = [x_dict[ptID][-1],'stop-treatment']
     
             
 #%%
@@ -205,40 +206,37 @@ def plot(ptID):
 for pt in result:
     lis=result[pt]
     if lis[1] != 'stop-treatment':
-        print('ok',pt)
+        print('ok',pt,result[pt])
 
 #%%
 '''
 纯CD4预测
-ok 23580
-ok 23623
-ok 23662
-ok 23663
-ok 23665
-ok 23720
-ok 23721
-ok 23722
-ok 23763
-ok 23438
-ok 23481
-ok 23525
-ok 23529
-ok 23530
+ok 23580 [12.377643267229301, 'keep-treatment']
+ok 23623 [29.733333333333423, 'keep-treatment']
+ok 23662 [70.863648200756472, 'keep-treatment']
+ok 23663 [16.070017326274851, 'keep-treatment']
+ok 23720 [57.000000000000256, 'keep-treatment']
+ok 23721 [29.469727711883429, 'keep-treatment']
+ok 23722 [26.271057451320043, 'keep-treatment']
+ok 23438 [9.0469160889172411, 'keep-treatment']
+ok 23481 [42.405593950337241, 'keep-treatment']
+ok 23525 [39.507056928032995, 'keep-treatment']
+ok 23529 [50.312761365458414, 'keep-treatment']
+ok 23530 [76.158394859141708, 'keep-treatment']
 
-23763 23525
+23525
 
 
 加上Vload
-ok 23580
-ok 23623
-ok 23662
-ok 23663
-ok 23665
-ok 23720
-ok 23721
-ok 23722
-ok 23438
-ok 23481
-ok 23529
-ok 23530
+ok 23580 [12.377643267229301, 'keep-treatment']
+ok 23623 [29.733333333333423, 'keep-treatment']
+ok 23662 [70.863648200756472, 'keep-treatment']
+ok 23663 [16.070017326274851, 'keep-treatment']
+ok 23720 [57.000000000000256, 'keep-treatment']
+ok 23721 [29.469727711883429, 'keep-treatment']
+ok 23722 [26.271057451320043, 'keep-treatment']
+ok 23438 [9.0469160889172411, 'keep-treatment']
+ok 23481 [42.405593950337241, 'keep-treatment']
+ok 23529 [50.312761365458414, 'keep-treatment']
+ok 23530 [76.158394859141708, 'keep-treatment']
 '''
