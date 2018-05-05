@@ -15,10 +15,9 @@ import matplotlib.pyplot as plt
 import csv
 import pandas as pd
 
-
-data1 = pd.read_csv('data1.csv')
-data2 = pd.read_csv('data2.csv')
-
+dirpath = os.getcwd()
+datapath = os.path.join(dirpath, 'data1.csv')
+data1 = pd.read_csv(datapath)
 
 #%%
 #先将dataframe割开，从而删除掉 NaN记录
@@ -242,3 +241,4 @@ ok 23438
 ok 23481
 ok 23529
 ok 23530
+'''
