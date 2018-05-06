@@ -1,4 +1,4 @@
-ID,therapy,age,timestamp,Log(CD4 count+1) 
+﻿PtID,therapy,age,CD4Date,CD4Count
 1,2,36.4271,0,3.1355
 1,2,36.4271,7.5714,3.0445
 1,2,36.4271,15.5714,2.7726

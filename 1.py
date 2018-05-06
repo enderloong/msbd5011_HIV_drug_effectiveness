@@ -160,10 +160,9 @@ for ptID in result:
         print(ptID,result[ptID])
 '''  
 #%%
-#先通过Vload的最终浓度和时间 (x>10 且 y>3）时，直接放弃治疗；
-#否则 转至CD4拟合预测终止治疗时间
-        
+'''       
 result = {}     #{ptID:[终止时间]}
+ansxxx={}
 for ptID in patient:
     if ptID in patient2:
         last_period = t_dict[ptID][-1]
@@ -183,14 +182,46 @@ for ptID in patient:
            ans.append(1000000)
        else:
            ans.append(i)
-    ans.sort()               
-    if ans[0] > x_dict[ptID][-1] and ans[0]!=1000000:
+    ans.sort()
+    ansxxx[ptID]=ans
+    if len(ans)==0:
+        result[ptID] = [x_dict[ptID][-1],'stop-treatment']
+    elif ans[0] > x_dict[ptID][-1] and ans[0]!=1000000:
         result[ptID] = [ans[0],'keep-treatment']
     elif ans[1] > x_dict[ptID][-1] and ans[1]!=1000000:
         result[ptID] = [ans[1],'keep-treatment']        
     else:
         result[ptID] = [x_dict[ptID][-1],'stop-treatment']
-    
+'''
+#%%
+#先通过Vload的最终浓度和时间 (x>10 且 y>3）时，直接放弃治疗；
+#否则 转至CD4拟合预测终止治疗时间
+result = {}     #{ptID:[终止时间]}
+ansxxx={}
+for ptID in patient:
+    if ptID in patient2:
+        last_period = t_dict[ptID][-1]
+        last_vload = v_dict[ptID][-1]
+        if last_period>10 and last_vload >3:
+            result[ptID] = [last_period, 'stop-treatment']
+            continue
+    coe = best_m[ptID].c 
+    new_coe = coe.copy()
+    new_coe[-1] -= 500
+    root = np.roots(new_coe)
+    ans = []
+    for i in root:    
+        if isinstance(i,complex) == False and i>0:
+            ans.append(i)
+    #if len(ans)==0:
+        #print(ptID,root)
+    ans.sort()
+    result[ptID] = [x_dict[ptID][-1],'stop-treatment']
+    for j in range(len(ans)):
+        if ans[j]>x_dict[ptID][-1]:
+            result[ptID] = [ans[j],'keep-treatment']
+            break
+        
             
 #%%
 def plot(ptID):
@@ -232,6 +263,7 @@ ok 23580 [12.377643267229301, 'keep-treatment']
 ok 23623 [29.733333333333423, 'keep-treatment']
 ok 23662 [70.863648200756472, 'keep-treatment']
 ok 23663 [16.070017326274851, 'keep-treatment']
+ok 23665 [107.5310128906801, 'keep-treatment']
 ok 23720 [57.000000000000256, 'keep-treatment']
 ok 23721 [29.469727711883429, 'keep-treatment']
 ok 23722 [26.271057451320043, 'keep-treatment']
