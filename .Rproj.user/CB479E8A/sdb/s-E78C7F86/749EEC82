@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "ctrl = 0\nif(ctrl < 1){\n  data2_the1 <- read.csv(file = 'df_1.csv')\n  data2_the2 <- read.csv(file = 'df_2.csv')\n  data2_the3 <- read.csv(file = 'df_3.csv')\n  data2_the4 <- read.csv(file = 'df_4.csv')\n  data2_the <- list(the1 = data2_the1, the2 = data2_the2, the3 = data2_the3, the4 = data2_the4)\n}\n\nif(ctrl < 2){\n  data_age_the <- matrix(0,4,65)\n  for(i in 1:4){\n    age <- data2_the[[i]]$age\n    for(j in 1:length(age)){\n      idx <- age[j] -10\n      data_age_the[i,idx] <- data_age_the[i,idx] + 1\n    }\n  }\n  data_cdf_age <- data_age_the\n  for(i in 2:length(data_cdf_age[1,])){\n    data_cdf_age[,i] = data_cdf_age[,i-1] + data_cdf_age[,i]\n  }\n  tpdata <- as.data.frame(t(data_cdf_age))\n}\n\nif(ctrl < -3){\n  datalen <- length(tpdata[,1])\n  gfig <- ggplot()\n  gfig <- gfig + geom_line(data = tpdata, aes(x = 1:datalen, y = V1), colour = 'red')\n  gfig <- gfig + geom_line(data = tpdata, aes(x = 1:datalen, y = V2), colour = 'green')\n  gfig <- gfig + geom_line(data = tpdata, aes(x = 1:datalen, y = V3), colour = 'blue')\n  gfig <- gfig + geom_line(data = tpdata, aes(x = 1:datalen, y = V4), colour = 'black')\n  gfig\n}\n\nif(ctrl < 4){\n  w = 1\n  totallen <- c(length(data2_the1[,1]), length(data2_the2[,1]), length(data2_the3[,1]), length(data2_the4[,1]))\n  data_refine <- matrix(0,sum(totallen), 3)\n  for(i in 1:4){\n    data_temp <- data2_the[[i]]\n    firstidx <- 0\n    if(i > 1){\n      firstidx <- sum(totallen[1:i-1])\n    }\n    mi <- max(data_temp$max.increment)\n    mt <- max(data_temp$max.time)\n    for(j in 1:length(data_temp[,1])){\n      data_refine[j+firstidx, 1] <- data_temp$threapy[j]\n      if(data_temp$age[j] < 30){\n        data_refine[j+firstidx, 2] <- 1\n      }else if(data_temp$age[j] <35){\n        data_refine[j+firstidx, 2] <- 2\n      }else{\n        data_refine[j+firstidx, 2] <- 3\n      }\n      data_refine[j+firstidx, 3] <- 0\n      if(data_temp$max.time[j] > 0){\n        data_refine[j+firstidx, 3] <- w * data_temp$max.increment[j]/mi + (1 - w) * mt / data_temp$max.time[j]\n      }\n    }\n  }\n}\n\nif(ctrl < 5){\n  df_refined <- as.data.frame(data_refine)\n  df_refined[,1] <- factor(df_refined$V1, ordered = FALSE)\n  df_refined[,2] <- factor(df_refined$V2, ordered = TRUE)\n  anova_result <- aov(V3 ~ V1 * V2, data = df_refined)\n}\n\nif(ctrl < -6){\n  num1 <- 0\n  num2 <- 0\n  num3 <- 0\n  for(i in 1:4){\n    data_temp <- data2_the[[i]]\n    for(j in 1:length(data_temp[,1])){\n      if((data_temp$max.increment[j] == 0)){\n        num1 <- num1 + 1\n      } \n      if((data_temp$max.time[j] == 0)){\n        num2 <- num2 + 1\n      } \n      if(!(data_temp$max.increment[j] == 0) && (data_temp$max.time[j] == 0)){\n        num3 <- num3 + 1\n      } \n    }\n  }\n  gfig <- ggplot()\n  gfig <- gfig + geom_point(data = data2_the1, aes(x = max.increment, y = max.time))\n  gfig\n}",
+    "created" : 1525590624731.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "382790655",
+    "id" : "749EEC82",
+    "lastKnownWriteTime" : 1525604988,
+    "last_content_update" : 1525604988223,
+    "path" : "~/Files/Codes/R/RPj_20_5011Project/codes/Design2.R",
+    "project_path" : "Design2.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

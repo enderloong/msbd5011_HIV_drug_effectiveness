@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "ctrl <- 0\nif(ctrl < 1){\n  new_df <- read.csv(file = 'new_df.csv')\n}\n\nif(ctrl < 2){\n  df_refined <- new_df\n  df_refined$therapy <- factor(df_refined$therapy, ordered = FALSE)\n  ml <- rep(1,4)\n}\n\nif(ctrl < 3){\n  anova_result <- aov( last.cd4 ~ therapy + age + initial, data = df_refined)\n  summary(anova_result)\n}",
+    "created" : 1525682316528.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1968090292",
+    "id" : "5638E853",
+    "lastKnownWriteTime" : 1525682904,
+    "last_content_update" : 1525682904501,
+    "path" : "~/Files/Codes/R/RPj_20_5011Project/codes/Design24.R",
+    "project_path" : "Design24.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
