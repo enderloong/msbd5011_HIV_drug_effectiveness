@@ -100,30 +100,42 @@ result_2 = {}
 for ptID in patient:
     pm = {}     #{xp1:yp1,}
     ans = data2.loc[data2['PtID']==ptID,['therapy']]
-    threapy = int(ans.iloc[0])
+    therapy = int(ans.iloc[0])
     anss = data2.loc[data2['PtID']==ptID,['age']]
     age = int(anss.iloc[0])
     c0 = y_dict[ptID][0]
-    xp = np.linspace(0,50,1000)           #t,周
-    m = best_m[ptID]
-    max_cd4 = c0
-    max_t = 0
-    for x in xp:       
-        cur_t = x
-        cur_cd4 = m(x)
-        if cur_cd4 > max_cd4:
-            max_cd4 = cur_cd4
-            max_t = x
-    result_2[ptID] = [threapy,age,(max_cd4-c0),max_t]
+    #xp = np.linspace(0,50,1000)           #t,周
+    #m = best_m[ptID]
+    #max_cd4 = c0
+    #max_t = 0
+    #for x in xp:       
+    #    cur_t = x
+    #    cur_cd4 = m(x)
+    #    if cur_cd4 > max_cd4:
+    #        max_cd4 = cur_cd4
+    #        max_t = x
+    result_2[ptID] = [therapy,age,c0,x_dict[ptID][-1],y_dict[ptID][-1]] 
+    #result_2[ptID] = [therapy,age,y_dict[ptID][-1],c0] #2显著
+    #result_2[ptID] = [therapy,age,max_cd4,c0]   #1 疗效显著
+    #result_2[ptID] = [therapy,age,(max_cd4-c0),c0]  #5.6疗效显著
+    #result_2[ptID] = [therapy,age,(max_cd4-c0),max_t] #5.6max-t不显著
+    #result_2[ptID] = [therapy,age,(max_cd4-c0)/(c0+0.0000001),max_t]
     
 #%%
 #将result_2变成dataframe
-new_df = pd.DataFrame(list(result_2.values()), columns=['threapy','age', 'max-increment','max-time'])
+#new_df = pd.DataFrame(list(result_2.values()), columns=['threapy','age', 'max-increment','max-time'])
 
-df_1 = pd.DataFrame(columns=['threapy','age', 'max-increment','max-time'])
-df_2 = pd.DataFrame(columns=['threapy','age', 'max-increment','max-time'])
-df_3 = pd.DataFrame(columns=['threapy','age', 'max-increment','max-time'])
-df_4 = pd.DataFrame(columns=['threapy','age', 'max-increment','max-time'])
+#df_1 = pd.DataFrame(columns=['therapy','age', 'max-increment','max-time'])
+#df_2 = pd.DataFrame(columns=['therapy','age', 'max-increment','max-time'])
+#df_3 = pd.DataFrame(columns=['therapy','age', 'max-increment','max-time'])
+#df_4 = pd.DataFrame(columns=['therapy','age', 'max-increment','max-time'])
+
+new_df = pd.DataFrame(list(result_2.values()), columns=['therapy','age','initial','last-time','last-cd4'])
+
+df_1 = pd.DataFrame(columns=['therapy','age','initial','last-time','last-cd4'])
+df_2 = pd.DataFrame(columns=['therapy','age','initial','last-time','last-cd4'])
+df_3 = pd.DataFrame(columns=['therapy','age','initial','last-time','last-cd4'])
+df_4 = pd.DataFrame(columns=['therapy','age','initial','last-time','last-cd4'])
 
 for ind in range(len(new_df)):
     if new_df.iloc[ind,0]==1:
@@ -144,3 +156,36 @@ df_4 = df_4.sort_values(by=['age'])   #298条 15-62岁
 
 ####输出4个dataframe 分别是四类药物 按年纪排序的结果
 
+#%%
+#写成csv文件
+df_1.to_csv ("df_1.csv" , index=False)
+df_2.to_csv ("df_2.csv" , index=False)
+df_3.to_csv ("df_3.csv" , index=False)
+df_4.to_csv ("df_4.csv" , index=False)
+#xxx = pd.read_csv ("df_1.csv" )
+
+new_df.to_csv ("new_df.csv" , index=False)
+
+#%%
+#分组
+a=0
+b=0
+c=0
+d=0
+dfxxx=df_4
+for ind in range(len(dfxxx)):
+    if dfxxx.iloc[ind,1]<=30:
+        a=a+1
+    elif dfxxx.iloc[ind,1]>30 and dfxxx.iloc[ind,1]<=35:
+        b=b+1
+    elif dfxxx.iloc[ind,1]>35 and dfxxx.iloc[ind,1]<=40:
+        c=c+1
+    else:
+        d=d+1
+    
+print(a,b,c,d)    
+#65 76 64 89
+#61 70 70 89
+#61 70 70 89
+#63 81 67 97
+    
